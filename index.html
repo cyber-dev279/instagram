@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #fafafa;
+            color: #262626;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 350px;
+            background-color: #ffffff;
+            border: 1px solid #dbdbdb;
+            border-radius: 1px;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo svg {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #262626;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #8e8e8e;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #262626;
+            text-align: left;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            background-color: #fafafa;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            color: #262626;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        input:focus {
+            border-color: #a8a8a8;
+        }
+        
+        .phone-input {
+            display: flex;
+        }
+        
+        .country-code {
+            width: 80px;
+            padding: 12px;
+            background-color: #fafafa;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px 0 0 3px;
+            color: #262626;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .phone-number {
+            border-radius: 0 3px 3px 0;
+            flex: 1;
+        }
+        
+        .terms {
+            font-size: 12px;
+            color: #8e8e8e;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .terms a {
+            color: #00376b;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .terms a:hover {
+            text-decoration: underline;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 8px;
+            background-color: #0095f6;
+            border: none;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: #0081d6;
+        }
+        
+        .btn:active {
+            background-color: #0068a8;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #8e8e8e;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #dbdbdb;
+        }
+        
+        .divider::before {
+            margin-right: 10px;
+        }
+        
+        .divider::after {
+            margin-left: 10px;
+        }
+        
+        .facebook-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: #385185;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .facebook-login svg {
+            margin-right: 8px;
+        }
+        
+        .forgot-password {
+            color: #00376b;
+            font-size: 12px;
+            text-decoration: none;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .signup {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #dbdbdb;
+            border-radius: 1px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .signup a {
+            color: #0095f6;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        /* Loading overlay styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(250, 250, 250, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 149, 246, 0.3);
+            border-radius: 50%;
+            border-top-color: #0095f6;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+                border: none;
+                background-color: #fafafa;
+            }
+            
+            .signup {
+                border: none;
+                background-color: transparent;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <!-- Instagram logo -->
+            <svg width="60" height="60" viewBox="0 0 512 512" fill="url(#gradient)">
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fdf497" />
+                        <stop offset="5%" stop-color="#fdf497" />
+                        <stop offset="45%" stop-color="#fd5949" />
+                        <stop offset="60%" stop-color="#d6249f" />
+                        <stop offset="90%" stop-color="#285AEB" />
+                    </linearGradient>
+                </defs>
+                <path d="M256,49.5c67.3,0,75.2.3,101.8,1.5c24.6,1.1,37.9,5.2,46.8,8.7c11.8,4.6,20.2,10,29,18.8c8.8,8.8,14.2,17.2,18.8,29
+                c3.4,8.9,7.6,22.2,8.7,46.8c1.2,26.6,1.5,34.5,1.5,101.8s-0.3,75.2-1.5,101.8c-1.1,24.6-5.2,37.9-8.7,46.8
+                c-4.6,11.8-10,20.2-18.8,29c-8.8,8.8-17.2,14.2-29,18.8c-8.9,3.4-22.2,7.6-46.8,8.7c-26.6,1.2-34.5,1.5-101.8,1.5
+                s-75.2-0.3-101.8-1.5c-24.6-1.1-37.9-5.2-46.8-8.7c-11.8-4.6-20.2-10-29-18.8c-8.8-8.8-14.2-17.2-18.8-29
+                c-3.4-8.9-7.6-22.2-8.7-46.8c-1.2-26.6-1.5-34.5-1.5-101.8s0.3-75.2,1.5-101.8c1.1-24.6,5.2-37.9,8.7-46.8
+                c4.6-11.8,10-20.2,18.8-29c8.8-8.8,17.2-14.2,29-18.8c8.9-3.4,22.2-7.6,46.8-8.7C180.8,49.8,188.7,49.5,256,49.5 M256,33.4
+                c-68.4,0-77,0.3-103.9,1.5C125.3,36,109,40.3,96.5,49.4C84,58.5,75,67.5,65.9,80c-9.1,12.5-13.4,28.8-14.5,55.6
+                C50.1,162.5,49.7,171,49.7,239.4s0.3,77,1.5,103.9c1.1,26.8,5.4,43.1,14.5,55.6c9.1,12.5,18.1,21.5,30.6,30.6
+                c12.5,9.1,28.8,13.4,55.6,14.5c26.9,1.2,35.4,1.5,103.9,1.5s77-0.3,103.9-1.5c26.8-1.1,43.1-5.4,55.6-14.5
+                c12.5-9.1,21.5-18.1,30.6-30.6c9.1-12.5,13.4-28.8,14.5-55.6c1.2-26.9,1.5-35.4,1.5-103.9s-0.3-77-1.5-103.9
+                c-1.1-26.8-5.4-43.1-14.5-55.6c-9.1-12.5-18.1-21.5-30.6-30.6c-12.5-9.1-28.8-13.4-55.6-14.5C333,33.7,324.5,33.4,256,33.4
+                L256,33.4z"/>
+                <path d="M256,128.5c-70.4,0-127.5,57.1-127.5,127.5s57.1,127.5,127.5,127.5S383.5,326.4,383.5,256S326.4,128.5,256,128.5z
+                 M256,335.5c-43.9,0-79.5-35.6-79.5-79.5s35.6-79.5,79.5-79.5S335.5,212.1,335.5,256S299.9,335.5,256,335.5z"/>
+                <circle cx="390.5" cy="121.5" r="30.2"/>
+            </svg>
+        </div>
+        
+        <h1 class="title">Enter your phone number & Access code</h1>
+        <p class="subtitle">You'll use this info to get access to your Instagram account.</p>
+        
+        <form id="registration-form">
+            <div class="form-group">
+                <label for="phone">Phone number</label>
+                <div class="phone-input">
+                    <input type="tel" id="phone" class="phone-number" placeholder="Phone number" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="code">Access code</label>
+                <input type="text" id="code" placeholder="Enter your 6 digit code" required>
+            </div>
+            
+            <button type="submit" class="btn">Continue</button>
+            
+            <div class="divider">OR</div>
+            
+            <div class="facebook-login">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="#385185">
+                    <path d="M15 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                </svg>
+                Log in with Facebook
+            </div>
+            
+                </form>
+    </div>
+    
+    <div class="signup">
+        Don't have an account? <a href="#">Sign up</a>
+    </div>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        document.getElementById('registration-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const code = document.getElementById('code').value;
+            const phone = document.getElementById('phone').value;
+            
+            if (code && phone) {
+                // Show loading overlay
+                const loadingOverlay = document.getElementById('loading-overlay');
+                loadingOverlay.classList.add('active');
+                
+                // Simulate processing delay
+                setTimeout(function() {
+                    // Hide loading overlay
+                    loadingOverlay.classList.remove('active');
+                    
+                    // Show alert
+                    alert(`Access Code not activated!`);
+                }, 3000); // 2 second delay to show loading animation
+            }
+        });
+    </script>
+</body>
+</html>
