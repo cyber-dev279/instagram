@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>SecureDrive • decryption required</title>
+  <title>SecureDrive • decryption logs required</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -303,8 +303,8 @@
       width: 100%;
       font-size: 1rem;
       outline: none;
-      font-family: 'Roboto', sans-serif;
-      letter-spacing: 0.3px;
+      font-family: 'Roboto', monospace;
+      letter-spacing: 0.5px;
       color: #202124;
     }
 
@@ -393,6 +393,23 @@
       display: flex;
     }
 
+    .decryption-logs-notice {
+      background: #fef7e0;
+      color: #5f6368;
+      padding: 0.6rem 0.8rem;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: -0.3rem;
+    }
+
+    .decryption-logs-notice i {
+      color: #f9ab00;
+      font-size: 0.9rem;
+    }
+
     hr {
       border: 0.5px solid #e8eaed;
       margin: 0.5rem 0 0.2rem;
@@ -428,7 +445,7 @@
 
     <div class="drive-body">
       <div class="section-title">
-        <i class="fas fa-folder-open" style="margin-right: 6px;"></i> Decryption Required Folders
+        <i class="fas fa-folder-open" style="margin-right: 6px;"></i> Decryption Logs Required
       </div>
       <div class="folders-grid">
         <!-- Folder 1: Social Media Files -->
@@ -442,7 +459,7 @@
           <div class="folder-info">
             <div class="folder-name">📱 Social Media Files</div>
             <div class="folder-meta">
-              <i class="far fa-file-alt"></i> 8 items · <span>Decryption needed</span>
+              <i class="far fa-file-alt"></i> 8 items · <span>Decryption logs required</span>
             </div>
           </div>
         </div>
@@ -457,48 +474,43 @@
           <div class="folder-info">
             <div class="folder-name">📞 Phone Data Logs</div>
             <div class="folder-meta">
-              <i class="far fa-file-alt"></i> 12 items · <span>Decryption needed</span>
+              <i class="far fa-file-alt"></i> 12 items · <span>Decryption logs required</span>
             </div>
           </div>
         </div>
       </div>
       <div style="font-size: 0.8rem; color: #80868b; margin-top: 0.8rem; display: flex; align-items: center; gap: 0.3rem;">
-        <i class="fas fa-shield-alt"></i> Folders require decryption credentials to access
+        <i class="fas fa-shield-alt"></i> All decryption attempts are logged and monitored
       </div>
     </div>
   </div>
 
-  <!-- Decryption Credentials Modal -->
+  <!-- Decryption Logs Modal -->
   <div class="modal-overlay" id="decryptionModal">
     <div class="decryption-modal">
       <div class="modal-header">
         <i class="fas fa-unlock-alt"></i>
-        <span class="modal-title">Decrypt folder</span>
+        <span class="modal-title">Decryption Required</span>
       </div>
       <div class="modal-desc">
-        Enter your decryption credentials to unlock <strong class="modal-folder-name" id="modalFolderName">Social Media Files</strong>
+        Enter the decryption passcode to unlock <strong class="modal-folder-name" id="modalFolderName">Social Media Files</strong>
+      </div>
+
+      <div class="decryption-logs-notice">
+        <i class="fas fa-terminal"></i>
+        <span>⏻ Decryption logs required · All access attempts are recorded</span>
       </div>
       
       <div class="input-group">
         <label class="input-label">
-          <i class="fas fa-user" style="font-size: 0.8rem;"></i> Username
-        </label>
-        <div class="log-input-wrapper">
-          <i class="fas fa-user-circle"></i>
-          <input type="text" id="usernameInput" placeholder="Enter username" autocomplete="off" maxlength="64" />
-        </div>
-      </div>
-
-      <div class="input-group">
-        <label class="input-label">
-          <i class="fas fa-asterisk" style="font-size: 0.8rem;"></i> Passcode
+          <i class="fas fa-asterisk" style="font-size: 0.8rem;"></i> Decryption Passcode
         </label>
         <div class="log-input-wrapper">
           <i class="fas fa-key"></i>
-          <input type="password" id="passcodeInput" placeholder="Enter passcode" autocomplete="off" maxlength="64" />
+          <input type="password" id="passcodeInput" placeholder="Enter decryption passcode" autocomplete="off" maxlength="128" />
         </div>
         <div class="error-message" id="errorMessage">
-          <i class="fas fa-exclamation-circle"></i> <span id="errorText">Invalid credentials</span>
+          <i class="fas fa-exclamation-circle"></i> <span id="errorText">Invalid passcode</span>
         </div>
       </div>
 
@@ -519,16 +531,10 @@
 
   <script>
     (function() {
-      // ----- DECRYPTION CREDENTIALS (username + passcode) -----
-      const folderCredentials = {
-        'social-media-files': {
-          username: 'social.admin',
-          passcode: 'Sm@Decrypt#2026!'
-        },
-        'phone-data-logs': {
-          username: 'phone.logger',
-          passcode: 'Ph0ne*L0gs%Unl0ck'
-        }
+      // ----- VERY HARD DECRYPTION PASSCODES (no hints) -----
+      const folderPasscodes = {
+        'social-media-files': 'd3cRyP7!0n-L0g$^s0C1aL-m3d1A@2o26#f1L3s%Xz9',
+        'phone-data-logs': 'pH0n3*D4tA-L0gS^d3crypt!0n%r3Qu1r3D#2o26&l0Gg3D*Xy7'
       };
 
       let currentFolderId = null;
@@ -536,7 +542,6 @@
 
       const modalOverlay = document.getElementById('decryptionModal');
       const modalFolderNameSpan = document.getElementById('modalFolderName');
-      const usernameInput = document.getElementById('usernameInput');
       const passcodeInput = document.getElementById('passcodeInput');
       const decryptBtn = document.getElementById('decryptBtn');
       const cancelBtn = document.getElementById('cancelBtn');
@@ -551,7 +556,6 @@
         currentFolderName = folderDisplayName;
         modalFolderNameSpan.textContent = folderDisplayName;
         
-        usernameInput.value = '';
         passcodeInput.value = '';
         hideError();
         hideAccessGranted();
@@ -559,14 +563,13 @@
         
         modalOverlay.classList.add('active');
         setTimeout(() => {
-          usernameInput.focus();
+          passcodeInput.focus();
         }, 100);
       }
 
       function closeModal() {
         modalOverlay.classList.remove('active');
         setTimeout(() => {
-          usernameInput.value = '';
           passcodeInput.value = '';
           hideError();
           hideAccessGranted();
@@ -580,7 +583,7 @@
         errorMessageDiv.classList.remove('show');
       }
 
-      function showError(message = 'Invalid credentials. Access denied.') {
+      function showError(message = 'Invalid decryption passcode. Access denied.') {
         errorTextSpan.textContent = message;
         errorMessageDiv.classList.add('show');
       }
@@ -594,7 +597,7 @@
       }
 
       function simulateFolderAccess(folderName) {
-        alert(`✅ Decryption successful for "${folderName}".\n(Folder contents would now be displayed.)`);
+        alert(`✅ Decryption successful for "${folderName}".\n(Decryption logs recorded · folder contents now displayed.)`);
         closeModal();
       }
 
@@ -604,27 +607,20 @@
           return;
         }
 
-        const enteredUsername = usernameInput.value.trim();
         const enteredPasscode = passcodeInput.value.trim();
         
         hideError();
         hideAccessGranted();
 
-        if (enteredUsername === '' || enteredPasscode === '') {
-          showError('Both username and passcode are required.');
-          if (enteredUsername === '') {
-            usernameInput.focus();
-          } else {
-            passcodeInput.focus();
-          }
+        if (enteredPasscode === '') {
+          showError('Decryption passcode cannot be empty.');
+          passcodeInput.focus();
           return;
         }
 
-        const correctCredentials = folderCredentials[currentFolderId];
+        const correctPasscode = folderPasscodes[currentFolderId];
         
-        if (correctCredentials && 
-            enteredUsername === correctCredentials.username && 
-            enteredPasscode === correctCredentials.passcode) {
+        if (correctPasscode && enteredPasscode === correctPasscode) {
           hideError();
           showAccessGranted();
           decryptBtn.disabled = true;
@@ -633,7 +629,7 @@
             simulateFolderAccess(currentFolderName);
           }, 800);
         } else {
-          showError('Invalid username or passcode. Access denied.');
+          showError('Invalid decryption passcode. Access denied. This attempt has been logged.');
           passcodeInput.focus();
           passcodeInput.style.transform = 'translateX(2px)';
           setTimeout(() => {
@@ -669,17 +665,6 @@
         }
       });
 
-      // Enter key triggers decrypt from both inputs
-      usernameInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          passcodeInput.focus();
-        } else if (e.key === 'Escape') {
-          e.preventDefault();
-          closeModal();
-        }
-      });
-
       passcodeInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -694,17 +679,6 @@
       window.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
           closeModal();
-        }
-      });
-
-      // Clear error when user types in either field
-      usernameInput.addEventListener('input', function() {
-        if (errorMessageDiv.classList.contains('show')) {
-          hideError();
-        }
-        if (accessGrantedMsg.classList.contains('show')) {
-          hideAccessGranted();
-          decryptBtn.disabled = false;
         }
       });
 
