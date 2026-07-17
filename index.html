@@ -130,6 +130,18 @@
       background: #fafbfc;
     }
 
+    .folder-card.corrupted {
+      opacity: 0.6;
+      pointer-events: none;
+      border-color: #c5221f;
+      background: #fef7f7;
+    }
+
+    .folder-card.corrupted .folder-icon {
+      color: #c5221f;
+      background: #fce8e6;
+    }
+
     .folder-icon {
       font-size: 2.5rem;
       color: #1a73e8;
@@ -184,6 +196,30 @@
       font-size: 0.7rem;
     }
 
+    .corrupted-badge {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      background: #c5221f;
+      border-radius: 30px;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      display: none;
+    }
+
+    .folder-card.corrupted .corrupted-badge {
+      display: flex;
+    }
+
+    .folder-card.corrupted .lock-badge {
+      display: none;
+    }
+
     /* modal overlay */
     .modal-overlay {
       position: fixed;
@@ -211,7 +247,7 @@
     .decryption-modal {
       background: #ffffff;
       border-radius: 28px;
-      max-width: 440px;
+      max-width: 500px;
       width: 100%;
       padding: 2rem 1.8rem 1.8rem;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
@@ -376,21 +412,122 @@
       color: #5f6368;
     }
 
-    .access-granted-message {
-      background: #e6f4ea;
-      color: #137333;
-      padding: 0.7rem;
+    /* Loading overlay inside modal */
+    .loading-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      padding: 1.5rem 0;
+    }
+
+    .loading-overlay.active {
+      display: flex;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid #e8eaed;
+      border-top: 5px solid #1a73e8;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #202124;
+      text-align: center;
+    }
+
+    .loading-timer {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a73e8;
+      font-family: 'Roboto', monospace;
+    }
+
+    .loading-subtext {
+      font-size: 0.8rem;
+      color: #5f6368;
+      text-align: center;
+    }
+
+    /* Corrupted files message */
+    .corrupted-message {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      text-align: center;
+    }
+
+    .corrupted-message.active {
+      display: flex;
+    }
+
+    .corrupted-icon {
+      font-size: 3.5rem;
+      color: #c5221f;
+    }
+
+    .corrupted-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #c5221f;
+    }
+
+    .corrupted-details {
+      background: #fef7f7;
+      border: 1px solid #fce8e6;
       border-radius: 12px;
-      font-size: 0.9rem;
+      padding: 1rem;
+      font-size: 0.85rem;
+      color: #5f6368;
+      line-height: 1.6;
+      width: 100%;
+    }
+
+    .corrupted-details strong {
+      color: #c5221f;
+    }
+
+    .ip-address {
+      font-family: 'Roboto', monospace;
+      background: #f1f3f4;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 700;
+      color: #c5221f;
+    }
+
+    .cyber-police-notice {
+      background: #1a1a2e;
+      color: #e94560;
+      border: 2px solid #e94560;
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      width: 100%;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      margin-top: 0.3rem;
-      display: none;
+      justify-content: center;
     }
 
-    .access-granted-message.show {
-      display: flex;
+    .cyber-police-notice i {
+      font-size: 1.2rem;
     }
 
     .decryption-logs-notice {
@@ -408,6 +545,14 @@
     .decryption-logs-notice i {
       color: #f9ab00;
       font-size: 0.9rem;
+    }
+
+    .modal-content-wrapper {
+      display: block;
+    }
+
+    .modal-content-wrapper.hidden {
+      display: none;
     }
 
     hr {
@@ -449,31 +594,37 @@
       </div>
       <div class="folders-grid">
         <!-- Folder 1: Social Media Files -->
-        <div class="folder-card" data-folder="social-media-files" data-folder-name="Social Media Files">
+        <div class="folder-card" data-folder="social-media-files" data-folder-name="Social Media Files" id="folderSocial">
           <div class="lock-badge">
             <i class="fas fa-lock"></i> locked
+          </div>
+          <div class="corrupted-badge">
+            <i class="fas fa-exclamation-triangle"></i> corrupted
           </div>
           <div class="folder-icon">
             <i class="fas fa-folder"></i>
           </div>
           <div class="folder-info">
             <div class="folder-name">📱 Social Media Files</div>
-            <div class="folder-meta">
+            <div class="folder-meta" id="folderSocialMeta">
               <i class="far fa-file-alt"></i> 8 items · <span>Decryption logs required</span>
             </div>
           </div>
         </div>
         <!-- Folder 2: Phone Data Logs -->
-        <div class="folder-card" data-folder="phone-data-logs" data-folder-name="Phone Data Logs">
+        <div class="folder-card" data-folder="phone-data-logs" data-folder-name="Phone Data Logs" id="folderPhone">
           <div class="lock-badge">
             <i class="fas fa-lock"></i> locked
+          </div>
+          <div class="corrupted-badge">
+            <i class="fas fa-exclamation-triangle"></i> corrupted
           </div>
           <div class="folder-icon">
             <i class="fas fa-folder"></i>
           </div>
           <div class="folder-info">
             <div class="folder-name">📞 Phone Data Logs</div>
-            <div class="folder-meta">
+            <div class="folder-meta" id="folderPhoneMeta">
               <i class="far fa-file-alt"></i> 12 items · <span>Decryption logs required</span>
             </div>
           </div>
@@ -488,77 +639,214 @@
   <!-- Decryption Logs Modal -->
   <div class="modal-overlay" id="decryptionModal">
     <div class="decryption-modal">
-      <div class="modal-header">
-        <i class="fas fa-unlock-alt"></i>
-        <span class="modal-title">Decryption Required</span>
-      </div>
-      <div class="modal-desc">
-        Enter the decryption passcode to unlock <strong class="modal-folder-name" id="modalFolderName">Social Media Files</strong>
-      </div>
-
-      <div class="decryption-logs-notice">
-        <i class="fas fa-terminal"></i>
-        <span>⏻ Decryption logs required · All access attempts are recorded</span>
-      </div>
-      
-      <div class="input-group">
-        <label class="input-label">
-          <i class="fas fa-asterisk" style="font-size: 0.8rem;"></i> Decryption Logs
-        </label>
-        <div class="log-input-wrapper">
-          <i class="fas fa-key"></i>
-          <input type="password" id="passcodeInput" placeholder="Enter decryption logs" autocomplete="off" maxlength="128" />
+      <!-- Normal input content -->
+      <div class="modal-content-wrapper" id="modalInputContent">
+        <div class="modal-header">
+          <i class="fas fa-unlock-alt"></i>
+          <span class="modal-title">Decryption Required</span>
         </div>
-        <div class="error-message" id="errorMessage">
-          <i class="fas fa-exclamation-circle"></i> <span id="errorText">Invalid logs</span>
+        <div class="modal-desc">
+          Enter the decryption passcode to unlock <strong class="modal-folder-name" id="modalFolderName">Social Media Files</strong>
+        </div>
+
+        <div class="decryption-logs-notice">
+          <i class="fas fa-terminal"></i>
+          <span>⏻ Decryption logs required · All access attempts are recorded</span>
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-asterisk" style="font-size: 0.8rem;"></i> Decryption Passcode
+          </label>
+          <div class="log-input-wrapper">
+            <i class="fas fa-key"></i>
+            <input type="password" id="passcodeInput" placeholder="Enter decryption passcode" autocomplete="off" maxlength="128" />
+          </div>
+          <div class="error-message" id="errorMessage">
+            <i class="fas fa-exclamation-circle"></i> <span id="errorText">Invalid passcode</span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-cancel" id="cancelBtn">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+          <button class="btn btn-decrypt" id="decryptBtn">
+            <i class="fas fa-unlock-alt"></i> Decrypt
+          </button>
         </div>
       </div>
 
-      <div class="access-granted-message" id="accessGrantedMsg">
-        <i class="fas fa-check-circle"></i> <span>Decryption successful · accessing folder...</span>
+      <!-- Loading content -->
+      <div class="loading-overlay" id="modalLoadingContent">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Decrypting folder contents...</div>
+        <div class="loading-timer" id="loadingTimer">01:30:00</div>
+        <div class="loading-subtext">Estimated time remaining</div>
+        <div class="loading-subtext" style="color: #c5221f; font-weight: 500;">
+          <i class="fas fa-exclamation-triangle"></i> Do not close this window
+        </div>
       </div>
 
-      <div class="modal-actions">
-        <button class="btn btn-cancel" id="cancelBtn">
-          <i class="fas fa-times"></i> Cancel
-        </button>
-        <button class="btn btn-decrypt" id="decryptBtn">
-          <i class="fas fa-unlock-alt"></i> Decrypt
-        </button>
+      <!-- Corrupted files content -->
+      <div class="corrupted-message" id="modalCorruptedContent">
+        <div class="corrupted-icon">
+          <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="corrupted-title">⚠️ FILES CORRUPTED</div>
+        <div class="corrupted-details">
+          <p><strong>Decryption failed.</strong> All files in this folder have been permanently corrupted.</p>
+          <p style="margin-top: 0.5rem;"><strong>Reason:</strong> Unauthorized access detected from IP address:</p>
+          <p class="ip-address">47.19.82.204</p>
+          <p style="margin-top: 0.5rem;"><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> United States of America</p>
+        </div>
+        <div class="cyber-police-notice">
+          <i class="fas fa-shield-halting"></i>
+          <span>United States Cyber Police · Action Prohibited</span>
+        </div>
+        <div style="font-size: 0.75rem; color: #5f6368; text-align: center; margin-top: 0.3rem;">
+          This IP address has been reported to the United States Cyber Police. Unauthorized decryption attempts are strictly prohibited under federal law.
+        </div>
+        <div class="modal-actions" style="justify-content: center;">
+          <button class="btn btn-cancel" id="closeCorruptedBtn">
+            <i class="fas fa-times"></i> Close
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
     (function() {
-      // ----- VERY HARD DECRYPTION PASSCODES (no hints) -----
+      // ----- VERY HARD DECRYPTION PASSCODES -----
       const folderPasscodes = {
         'social-media-files': 'd3cRyP7!0n-L0g$^s0C1aL-m3d1A@2o26#f1L3s%Xz9',
         'phone-data-logs': 'pH0n3*D4tA-L0gS^d3crypt!0n%r3Qu1r3D#2o26&l0Gg3D*Xy7'
       };
 
+      // Track corrupted folders
+      const corruptedFolders = new Set();
+
       let currentFolderId = null;
       let currentFolderName = '';
+      let timerInterval = null;
+      let loadingStartTime = null;
+      const TOTAL_LOADING_SECONDS = 5400; // 1 hour 30 minutes = 5400 seconds
 
       const modalOverlay = document.getElementById('decryptionModal');
       const modalFolderNameSpan = document.getElementById('modalFolderName');
       const passcodeInput = document.getElementById('passcodeInput');
       const decryptBtn = document.getElementById('decryptBtn');
       const cancelBtn = document.getElementById('cancelBtn');
+      const closeCorruptedBtn = document.getElementById('closeCorruptedBtn');
       const errorMessageDiv = document.getElementById('errorMessage');
       const errorTextSpan = document.getElementById('errorText');
-      const accessGrantedMsg = document.getElementById('accessGrantedMsg');
+      
+      const modalInputContent = document.getElementById('modalInputContent');
+      const modalLoadingContent = document.getElementById('modalLoadingContent');
+      const modalCorruptedContent = document.getElementById('modalCorruptedContent');
+      const loadingTimer = document.getElementById('loadingTimer');
       
       const folderCards = document.querySelectorAll('.folder-card');
 
+      function formatTime(seconds) {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      }
+
+      function showInputContent() {
+        modalInputContent.classList.remove('hidden');
+        modalLoadingContent.classList.remove('active');
+        modalCorruptedContent.classList.remove('active');
+      }
+
+      function showLoadingContent() {
+        modalInputContent.classList.add('hidden');
+        modalLoadingContent.classList.add('active');
+        modalCorruptedContent.classList.remove('active');
+      }
+
+      function showCorruptedContent() {
+        modalInputContent.classList.add('hidden');
+        modalLoadingContent.classList.remove('active');
+        modalCorruptedContent.classList.add('active');
+      }
+
+      function markFolderCorrupted(folderId) {
+        corruptedFolders.add(folderId);
+        const folderCard = document.getElementById(
+          folderId === 'social-media-files' ? 'folderSocial' : 'folderPhone'
+        );
+        const folderMeta = document.getElementById(
+          folderId === 'social-media-files' ? 'folderSocialMeta' : 'folderPhoneMeta'
+        );
+        
+        if (folderCard) {
+          folderCard.classList.add('corrupted');
+        }
+        if (folderMeta) {
+          folderMeta.innerHTML = '<i class="far fa-file-alt"></i> 0 items · <span style="color:#c5221f;">Files corrupted</span>';
+        }
+      }
+
+      function startLoadingTimer() {
+        loadingStartTime = Date.now();
+        updateTimerDisplay();
+        
+        timerInterval = setInterval(() => {
+          const elapsed = Math.floor((Date.now() - loadingStartTime) / 1000);
+          const remaining = Math.max(0, TOTAL_LOADING_SECONDS - elapsed);
+          
+          updateTimerDisplayWithRemaining(remaining);
+          
+          if (remaining <= 0) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            // Time's up - show corrupted files
+            showCorruptedContent();
+            if (currentFolderId) {
+              markFolderCorrupted(currentFolderId);
+            }
+          }
+        }, 1000);
+      }
+
+      function updateTimerDisplay() {
+        loadingTimer.textContent = formatTime(TOTAL_LOADING_SECONDS);
+      }
+
+      function updateTimerDisplayWithRemaining(remaining) {
+        loadingTimer.textContent = formatTime(remaining);
+      }
+
+      function stopLoadingTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
       function openModal(folderId, folderDisplayName) {
+        // Check if folder is already corrupted
+        if (corruptedFolders.has(folderId)) {
+          currentFolderId = folderId;
+          currentFolderName = folderDisplayName;
+          modalFolderNameSpan.textContent = folderDisplayName;
+          showCorruptedContent();
+          modalOverlay.classList.add('active');
+          return;
+        }
+
         currentFolderId = folderId;
         currentFolderName = folderDisplayName;
         modalFolderNameSpan.textContent = folderDisplayName;
         
         passcodeInput.value = '';
         hideError();
-        hideAccessGranted();
+        stopLoadingTimer();
+        showInputContent();
         decryptBtn.disabled = false;
         
         modalOverlay.classList.add('active');
@@ -569,13 +857,14 @@
 
       function closeModal() {
         modalOverlay.classList.remove('active');
+        stopLoadingTimer();
         setTimeout(() => {
           passcodeInput.value = '';
           hideError();
-          hideAccessGranted();
           currentFolderId = null;
           currentFolderName = '';
           decryptBtn.disabled = false;
+          showInputContent();
         }, 200);
       }
 
@@ -588,19 +877,6 @@
         errorMessageDiv.classList.add('show');
       }
 
-      function hideAccessGranted() {
-        accessGrantedMsg.classList.remove('show');
-      }
-
-      function showAccessGranted() {
-        accessGrantedMsg.classList.add('show');
-      }
-
-      function simulateFolderAccess(folderName) {
-        alert(`✅ Decryption successful for "${folderName}".\n(Decryption logs recorded · folder contents now displayed.)`);
-        closeModal();
-      }
-
       function attemptDecrypt() {
         if (!currentFolderId) {
           closeModal();
@@ -610,7 +886,6 @@
         const enteredPasscode = passcodeInput.value.trim();
         
         hideError();
-        hideAccessGranted();
 
         if (enteredPasscode === '') {
           showError('Decryption passcode cannot be empty.');
@@ -622,12 +897,11 @@
         
         if (correctPasscode && enteredPasscode === correctPasscode) {
           hideError();
-          showAccessGranted();
           decryptBtn.disabled = true;
           
-          setTimeout(() => {
-            simulateFolderAccess(currentFolderName);
-          }, 800);
+          // Show loading screen
+          showLoadingContent();
+          startLoadingTimer();
         } else {
           showError('Invalid decryption passcode. Access denied. This attempt has been logged.');
           passcodeInput.focus();
@@ -659,6 +933,11 @@
         closeModal();
       });
 
+      closeCorruptedBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeModal();
+      });
+
       modalOverlay.addEventListener('click', function(e) {
         if (e.target === modalOverlay) {
           closeModal();
@@ -685,10 +964,6 @@
       passcodeInput.addEventListener('input', function() {
         if (errorMessageDiv.classList.contains('show')) {
           hideError();
-        }
-        if (accessGrantedMsg.classList.contains('show')) {
-          hideAccessGranted();
-          decryptBtn.disabled = false;
         }
       });
 
