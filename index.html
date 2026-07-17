@@ -1,370 +1,676 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Registration</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-        
-        body {
-            background-color: #fafafa;
-            color: #262626;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 350px;
-            background-color: #ffffff;
-            border: 1px solid #dbdbdb;
-            border-radius: 1px;
-            padding: 40px 30px;
-            text-align: center;
-        }
-        
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .logo svg {
-            width: 60px;
-            height: 60px;
-        }
-        
-        .title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: #262626;
-            text-align: center;
-        }
-        
-        .subtitle {
-            color: #8e8e8e;
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-        
-        .form-group {
-            margin-bottom: 16px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #262626;
-            text-align: left;
-        }
-        
-        input {
-            width: 100%;
-            padding: 12px;
-            background-color: #fafafa;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            color: #262626;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        
-        input:focus {
-            border-color: #a8a8a8;
-        }
-        
-        .phone-input {
-            display: flex;
-        }
-        
-        .country-code {
-            width: 80px;
-            padding: 12px;
-            background-color: #fafafa;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px 0 0 3px;
-            color: #262626;
-            text-align: center;
-            font-size: 14px;
-        }
-        
-        .phone-number {
-            border-radius: 0 3px 3px 0;
-            flex: 1;
-        }
-        
-        .terms {
-            font-size: 12px;
-            color: #8e8e8e;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-        
-        .terms a {
-            color: #00376b;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .terms a:hover {
-            text-decoration: underline;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 8px;
-            background-color: #0095f6;
-            border: none;
-            border-radius: 4px;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        .btn:hover {
-            background-color: #0081d6;
-        }
-        
-        .btn:active {
-            background-color: #0068a8;
-        }
-        
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #8e8e8e;
-        }
-        
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 20px 0;
-            color: #8e8e8e;
-            font-size: 13px;
-            font-weight: 600;
-        }
-        
-        .divider::before,
-        .divider::after {
-            content: "";
-            flex: 1;
-            border-bottom: 1px solid #dbdbdb;
-        }
-        
-        .divider::before {
-            margin-right: 10px;
-        }
-        
-        .divider::after {
-            margin-left: 10px;
-        }
-        
-        .facebook-login {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            color: #385185;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        
-        .facebook-login svg {
-            margin-right: 8px;
-        }
-        
-        .forgot-password {
-            color: #00376b;
-            font-size: 12px;
-            text-decoration: none;
-        }
-        
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-        
-        .signup {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-            border: 1px solid #dbdbdb;
-            border-radius: 1px;
-            text-align: center;
-            font-size: 14px;
-        }
-        
-        .signup a {
-            color: #0095f6;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        
-        /* Loading overlay styles */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(250, 250, 250, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-            flex-direction: column;
-        }
-        
-        .loading-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(0, 149, 246, 0.3);
-            border-radius: 50%;
-            border-top-color: #0095f6;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-        
-        .loading-text {
-            color: #262626;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        @media (max-width: 480px) {
-            .container {
-                padding: 30px 20px;
-                border: none;
-                background-color: #fafafa;
-            }
-            
-            .signup {
-                border: none;
-                background-color: transparent;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>SecureDrive • encrypted folders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f8f9fa;
+      font-family: 'Google Sans', 'Roboto', system-ui, -apple-system, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+      margin: 0;
+    }
+
+    .drive-container {
+      max-width: 950px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s ease;
+    }
+
+    .drive-header {
+      padding: 1.2rem 2rem;
+      border-bottom: 1px solid #e8eaed;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background: #fff;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .drive-icon {
+      font-size: 2.2rem;
+      color: #1a73e8;
+    }
+
+    .logo-text {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #202124;
+      letter-spacing: -0.3px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      color: #5f6368;
+    }
+
+    .header-actions i {
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: color 0.2s;
+      border-radius: 50%;
+      padding: 0.4rem;
+    }
+
+    .header-actions i:hover {
+      color: #1a73e8;
+      background: #f1f3f4;
+    }
+
+    .drive-body {
+      padding: 1.8rem 2rem 2rem 2rem;
+      background: #ffffff;
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #5f6368;
+      margin-bottom: 1.3rem;
+    }
+
+    .folders-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .folder-card {
+      background: #ffffff;
+      border: 1px solid #e1e4e8;
+      border-radius: 18px;
+      padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      width: 220px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+      position: relative;
+    }
+
+    .folder-card:hover {
+      border-color: #bdc1c6;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      background: #fafbfc;
+    }
+
+    .folder-icon {
+      font-size: 2.5rem;
+      color: #1a73e8;
+      background: #e8f0fe;
+      padding: 0.8rem;
+      border-radius: 16px;
+      line-height: 1;
+    }
+
+    .folder-info {
+      width: 100%;
+    }
+
+    .folder-name {
+      font-weight: 500;
+      font-size: 1.1rem;
+      color: #202124;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 0.2rem;
+    }
+
+    .folder-meta {
+      font-size: 0.8rem;
+      color: #5f6368;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .folder-meta i {
+      font-size: 0.7rem;
+    }
+
+    .lock-badge {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      background: #fce8e6;
+      border-radius: 30px;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #c5221f;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .lock-badge i {
+      font-size: 0.7rem;
+    }
+
+    /* modal overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0.2s, opacity 0.2s ease;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .encryption-modal {
+      background: #ffffff;
+      border-radius: 28px;
+      max-width: 420px;
+      width: 100%;
+      padding: 2rem 1.8rem 1.8rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      transform: scale(0.95);
+      transition: transform 0.25s ease;
+      background: #fff;
+      border: 1px solid #e8eaed;
+    }
+
+    .active .encryption-modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .modal-header i {
+      font-size: 2rem;
+      color: #ea4335;
+      background: #fce8e6;
+      padding: 0.6rem;
+      border-radius: 50%;
+    }
+
+    .modal-title {
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: #202124;
+    }
+
+    .modal-folder-name {
+      font-weight: 700;
+      color: #1a73e8;
+    }
+
+    .modal-desc {
+      color: #5f6368;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-top: -0.5rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .input-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #202124;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .key-input-wrapper {
+      display: flex;
+      align-items: center;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      background: #f8f9fa;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    .key-input-wrapper:focus-within {
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+      background: #fff;
+    }
+
+    .key-input-wrapper i {
+      color: #5f6368;
+      margin-right: 0.6rem;
+      font-size: 1rem;
+    }
+
+    .key-input-wrapper input {
+      border: none;
+      background: transparent;
+      width: 100%;
+      font-size: 1rem;
+      outline: none;
+      font-family: 'Roboto', monospace;
+      letter-spacing: 0.5px;
+      color: #202124;
+    }
+
+    .key-input-wrapper input::placeholder {
+      color: #9aa0a6;
+      font-family: 'Google Sans', sans-serif;
+      letter-spacing: normal;
+    }
+
+    .error-message {
+      color: #c5221f;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.2rem;
+      visibility: hidden;
+      min-height: 1.2rem;
+    }
+
+    .error-message.show {
+      visibility: visible;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.7rem 1.5rem;
+      border-radius: 24px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      background: transparent;
+      transition: background 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-cancel {
+      color: #5f6368;
+    }
+
+    .btn-cancel:hover {
+      background: #f1f3f4;
+    }
+
+    .btn-decrypt {
+      background: #1a73e8;
+      color: white;
+      box-shadow: 0 1px 3px rgba(26, 115, 232, 0.3);
+    }
+
+    .btn-decrypt:hover {
+      background: #1557b0;
+      box-shadow: 0 2px 6px rgba(26, 115, 232, 0.4);
+    }
+
+    .btn-decrypt:disabled {
+      background: #c4c7cc;
+      box-shadow: none;
+      cursor: not-allowed;
+      color: #5f6368;
+    }
+
+    .access-granted-message {
+      background: #e6f4ea;
+      color: #137333;
+      padding: 0.7rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+      display: none;
+    }
+
+    .access-granted-message.show {
+      display: flex;
+    }
+
+    hr {
+      border: 0.5px solid #e8eaed;
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    @media (max-width: 550px) {
+      .drive-body {
+        padding: 1.2rem;
+      }
+      .folders-grid {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .folder-card {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <!-- Instagram logo -->
-            <svg width="60" height="60" viewBox="0 0 512 512" fill="url(#gradient)">
-                <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#fdf497" />
-                        <stop offset="5%" stop-color="#fdf497" />
-                        <stop offset="45%" stop-color="#fd5949" />
-                        <stop offset="60%" stop-color="#d6249f" />
-                        <stop offset="90%" stop-color="#285AEB" />
-                    </linearGradient>
-                </defs>
-                <path d="M256,49.5c67.3,0,75.2.3,101.8,1.5c24.6,1.1,37.9,5.2,46.8,8.7c11.8,4.6,20.2,10,29,18.8c8.8,8.8,14.2,17.2,18.8,29
-                c3.4,8.9,7.6,22.2,8.7,46.8c1.2,26.6,1.5,34.5,1.5,101.8s-0.3,75.2-1.5,101.8c-1.1,24.6-5.2,37.9-8.7,46.8
-                c-4.6,11.8-10,20.2-18.8,29c-8.8,8.8-17.2,14.2-29,18.8c-8.9,3.4-22.2,7.6-46.8,8.7c-26.6,1.2-34.5,1.5-101.8,1.5
-                s-75.2-0.3-101.8-1.5c-24.6-1.1-37.9-5.2-46.8-8.7c-11.8-4.6-20.2,10-29,18.8c-8.8,8.8-14.2,17.2-18.8,29
-                c-3.4,8.9-7.6,22.2-8.7,46.8c-1.2,26.6-1.5,34.5-1.5,101.8s0.3-75.2,1.5-101.8c1.1-24.6,5.2-37.9,8.7-46.8
-                c4.6-11.8,10-20.2,18.8-29c8.8-8.8,17.2-14.2,29-18.8c8.9-3.4,22.2-7.6,46.8-8.7C180.8,49.8,188.7,49.5,256,49.5 M256,33.4
-                c-68.4,0-77,0.3-103.9,1.5C125.3,36,109,40.3,96.5,49.4C84,58.5,75,67.5,65.9,80c-9.1,12.5-13.4,28.8-14.5,55.6
-                C50.1,162.5,49.7,171,49.7,239.4s0.3,77,1.5,103.9c1.1,26.8,5.4,43.1,14.5,55.6c9.1,12.5,18.1,21.5,30.6,30.6
-                c12.5,9.1,28.8,13.4,55.6,14.5c26.9,1.2,35.4,1.5,103.9,1.5s77-0.3,103.9-1.5c26.8-1.1,43.1-5.4,55.6-14.5
-                c12.5-9.1,21.5-18.1,30.6-30.6c9.1-12.5,13.4-28.8,14.5-55.6c1.2-26.9,1.5-35.4,1.5-103.9s-0.3-77-1.5-103.9
-                c-1.1-26.8-5.4-43.1-14.5-55.6c-9.1-12.5-18.1-21.5-30.6-30.6c-12.5-9.1-28.8-13.4-55.6-14.5C333,33.7,324.5,33.4,256,33.4
-                L256,33.4z"/>
-                <path d="M256,128.5c-70.4,0-127.5,57.1-127.5,127.5s57.1,127.5,127.5,127.5S383.5,326.4,383.5,256S326.4,128.5,256,128.5z
-                 M256,335.5c-43.9,0-79.5-35.6-79.5-79.5s35.6-79.5,79.5-79.5S335.5,212.1,335.5,256S299.9,335.5,256,335.5z"/>
-                <circle cx="390.5" cy="121.5" r="30.2"/>
-            </svg>
-        </div>
-        
-        <h1 class="title">Enter your User Name & Access Code</h1>
-        <p class="subtitle">You'll use this info to get access to your Instagram account.</p>
-        
-        <form id="registration-form">
-            <div class="form-group">
-                <label for="phone">Username</label>
-                <div class="phone-input">
-                    <input type="text" id="phone" class="phone-number" placeholder="Username" required>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="code">Access code</label>
-                <input type="text" id="code" placeholder="Enter your 6 digit code" required>
-            </div>
-            
-            <button type="submit" class="btn">Continue</button>
-            
-            <div class="divider">OR</div>
-            
-            <div class="facebook-login">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="#385185">
-                    <path d="M15 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
-                </svg>
-                Log in with Facebook
-            </div>
-            
-        </form>
-    </div>
-    
-    <!-- Loading overlay -->
-    <div class="loading-overlay" id="loading-overlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Verifying access code...</div>
-    </div>
+  <div class="drive-container">
+    <header class="drive-header">
+      <div class="logo-area">
+        <i class="fas fa-cloud drive-icon"></i>
+        <span class="logo-text">SecureDrive</span>
+      </div>
+      <div class="header-actions">
+        <i class="fas fa-search" title="Search"></i>
+        <i class="fas fa-cog" title="Settings"></i>
+        <i class="fas fa-user-circle" title="Account"></i>
+      </div>
+    </header>
 
-    <script>
-        document.getElementById('registration-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const code = document.getElementById('code').value;
-            const phone = document.getElementById('phone').value;
-            
-            if (code && phone) {
-                // Show loading overlay
-                const loadingOverlay = document.getElementById('loading-overlay');
-                loadingOverlay.classList.add('active');
-                
-                // Simulate processing delay
-                setTimeout(function() {
-                    // Hide loading overlay and show success message
-                    loadingOverlay.querySelector('.loading-text').textContent = "Access code verified! Loading messages...";
-                    
-                    setTimeout(function() {
-                        // Redirect to the insta-chat-list.html page
-                        window.location.href = 'insta-chat-list.html';
-                    }, 1500);
-                }, 2000);
-            }
+    <div class="drive-body">
+      <div class="section-title">
+        <i class="fas fa-folder-open" style="margin-right: 6px;"></i> Encrypted Folders
+      </div>
+      <div class="folders-grid">
+        <!-- Folder 1: Social Media Files -->
+        <div class="folder-card" data-folder="social-media-files" data-folder-name="Social Media Files">
+          <div class="lock-badge">
+            <i class="fas fa-lock"></i> encrypted
+          </div>
+          <div class="folder-icon">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div class="folder-info">
+            <div class="folder-name">📱 Social Media Files</div>
+            <div class="folder-meta">
+              <i class="far fa-file-alt"></i> 8 items · <span>Locked</span>
+            </div>
+          </div>
+        </div>
+        <!-- Folder 2: Phone Data Logs -->
+        <div class="folder-card" data-folder="phone-data-logs" data-folder-name="Phone Data Logs">
+          <div class="lock-badge">
+            <i class="fas fa-lock"></i> encrypted
+          </div>
+          <div class="folder-icon">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div class="folder-info">
+            <div class="folder-name">📞 Phone Data Logs</div>
+            <div class="folder-meta">
+              <i class="far fa-file-alt"></i> 12 items · <span>Locked</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 0.8rem; color: #80868b; margin-top: 0.8rem; display: flex; align-items: center; gap: 0.3rem;">
+        <i class="fas fa-shield-alt"></i> Folders require encryption key to access
+      </div>
+    </div>
+  </div>
+
+  <!-- Encryption Key Modal -->
+  <div class="modal-overlay" id="encryptionModal">
+    <div class="encryption-modal">
+      <div class="modal-header">
+        <i class="fas fa-key"></i>
+        <span class="modal-title">Decrypt folder</span>
+      </div>
+      <div class="modal-desc">
+        Enter the encryption key to unlock <strong class="modal-folder-name" id="modalFolderName">Social Media Files</strong>
+      </div>
+      
+      <div class="input-group">
+        <label class="input-label">
+          <i class="fas fa-lock" style="font-size: 0.8rem;"></i> Encryption Key
+        </label>
+        <div class="key-input-wrapper">
+          <i class="fas fa-key"></i>
+          <input type="password" id="encryptionKeyInput" placeholder="Enter encryption key" autocomplete="off" maxlength="64" />
+        </div>
+        <div class="error-message" id="errorMessage">
+          <i class="fas fa-exclamation-circle"></i> <span id="errorText">Invalid key</span>
+        </div>
+      </div>
+
+      <div class="access-granted-message" id="accessGrantedMsg">
+        <i class="fas fa-check-circle"></i> <span>Access granted · redirecting to folder...</span>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-cancel" id="cancelBtn">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+        <button class="btn btn-decrypt" id="decryptBtn">
+          <i class="fas fa-unlock-alt"></i> Unlock
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ----- HARD ENCRYPTION KEYS (no hints displayed anywhere) -----
+      const folderKeys = {
+        'social-media-files': 'K9#mP2$vL7@qR5*',
+        'phone-data-logs': 'X8&jN4!wC3^tB6%'
+      };
+
+      let currentFolderId = null;
+      let currentFolderName = '';
+
+      const modalOverlay = document.getElementById('encryptionModal');
+      const modalFolderNameSpan = document.getElementById('modalFolderName');
+      const encryptionInput = document.getElementById('encryptionKeyInput');
+      const decryptBtn = document.getElementById('decryptBtn');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const errorMessageDiv = document.getElementById('errorMessage');
+      const errorTextSpan = document.getElementById('errorText');
+      const accessGrantedMsg = document.getElementById('accessGrantedMsg');
+      
+      const folderCards = document.querySelectorAll('.folder-card');
+
+      function openModal(folderId, folderDisplayName) {
+        currentFolderId = folderId;
+        currentFolderName = folderDisplayName;
+        modalFolderNameSpan.textContent = folderDisplayName;
+        
+        encryptionInput.value = '';
+        hideError();
+        hideAccessGranted();
+        decryptBtn.disabled = false;
+        
+        modalOverlay.classList.add('active');
+        setTimeout(() => {
+          encryptionInput.focus();
+        }, 100);
+      }
+
+      function closeModal() {
+        modalOverlay.classList.remove('active');
+        setTimeout(() => {
+          encryptionInput.value = '';
+          hideError();
+          hideAccessGranted();
+          currentFolderId = null;
+          currentFolderName = '';
+          decryptBtn.disabled = false;
+        }, 200);
+      }
+
+      function hideError() {
+        errorMessageDiv.classList.remove('show');
+      }
+
+      function showError(message = 'Invalid encryption key. Access denied.') {
+        errorTextSpan.textContent = message;
+        errorMessageDiv.classList.add('show');
+      }
+
+      function hideAccessGranted() {
+        accessGrantedMsg.classList.remove('show');
+      }
+
+      function showAccessGranted() {
+        accessGrantedMsg.classList.add('show');
+      }
+
+      function simulateFolderAccess(folderName) {
+        alert(`✅ Access granted to "${folderName}".\n(Decryption successful – folder contents would now be displayed.)`);
+        closeModal();
+      }
+
+      function attemptDecrypt() {
+        if (!currentFolderId) {
+          closeModal();
+          return;
+        }
+
+        const enteredKey = encryptionInput.value.trim();
+        
+        hideError();
+        hideAccessGranted();
+
+        if (enteredKey === '') {
+          showError('Encryption key cannot be empty.');
+          encryptionInput.focus();
+          return;
+        }
+
+        const correctKey = folderKeys[currentFolderId];
+        
+        if (correctKey && enteredKey === correctKey) {
+          hideError();
+          showAccessGranted();
+          decryptBtn.disabled = true;
+          
+          setTimeout(() => {
+            simulateFolderAccess(currentFolderName);
+          }, 800);
+        } else {
+          showError('Incorrect encryption key. Access denied.');
+          encryptionInput.focus();
+          encryptionInput.style.transform = 'translateX(2px)';
+          setTimeout(() => {
+            encryptionInput.style.transform = '';
+          }, 80);
+        }
+      }
+
+      folderCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+          const folderId = this.dataset.folder;
+          const folderName = this.dataset.folderName || this.querySelector('.folder-name')?.textContent?.trim() || 'Folder';
+          
+          if (folderId) {
+            openModal(folderId, folderName);
+          }
         });
-    </script>
+      });
+
+      decryptBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        attemptDecrypt();
+      });
+
+      cancelBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeModal();
+      });
+
+      modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+          closeModal();
+        }
+      });
+
+      encryptionInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (decryptBtn.disabled) return;
+          attemptDecrypt();
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          closeModal();
+        }
+      });
+
+      window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+          closeModal();
+        }
+      });
+
+      encryptionInput.addEventListener('input', function() {
+        if (errorMessageDiv.classList.contains('show')) {
+          hideError();
+        }
+        if (accessGrantedMsg.classList.contains('show')) {
+          hideAccessGranted();
+          decryptBtn.disabled = false;
+        }
+      });
+
+    })();
+  </script>
 </body>
 </html>
